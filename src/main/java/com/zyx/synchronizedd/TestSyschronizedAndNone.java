@@ -36,7 +36,7 @@ class SyncThreadAndNone implements Runnable {
 	}
 
 	private void addWithSyschronized() {
-		synchronized (SyncThreadAndNone.class) {
+		synchronized (this) {
 			addCount();
 		}
 	}
