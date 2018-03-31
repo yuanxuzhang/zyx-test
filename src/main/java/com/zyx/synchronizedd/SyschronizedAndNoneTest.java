@@ -3,7 +3,7 @@ package com.zyx.synchronizedd;
 /**
  * 测试加锁与不加锁同时访问的情况 
  */
-public class TestSyschronizedAndNone {
+public class SyschronizedAndNoneTest {
 
 	public static void main(String[] args) {
 
@@ -11,7 +11,7 @@ public class TestSyschronizedAndNone {
 		Thread thread1 = new Thread(syncThread, "NoneSyncThread");
 		Thread thread2 = new Thread(syncThread, "SyncThread");
 		thread1.start();
-		//thread2.start();
+		thread2.start();
 
 	}
 
