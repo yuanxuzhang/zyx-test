@@ -11,6 +11,10 @@ import java.io.Serializable;
 /**
  * 测试序列化
  * 【序列化用序列号代替了内存地址】
+ * 序列化数据三点事项：
+ * 1、对象流输出中包含所有对象的类型和数据域
+ * 2、每个对象都被赋予一个序列号
+ * 3、相同对象的重复出现将被存储为对这个对象的序列号的引用
  */
 public class ObjectInputOutputTest {
 
