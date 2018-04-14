@@ -16,6 +16,7 @@ public class FinalTest {
 	public final int number;
 	
 	public FinalTest(int number){
+
 		this.number = number;
 	}
 
