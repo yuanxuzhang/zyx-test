@@ -3,7 +3,7 @@ package com.zyx.classinstance;
 /**
  * 方法可以访问所属类的所有对象的私有数据
  */
-public class MethodAccessPrivilege {
+public class MethodAccessPrivilegeTest {
 
 	public static void main(String[] args) {
 		
