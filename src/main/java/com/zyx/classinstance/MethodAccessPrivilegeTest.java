@@ -1,7 +1,7 @@
 package com.zyx.classinstance;
 
 /**
- * 方法可以访问所属类的所有对象的私有数据
+ * 方法可以访问所属类的所有对象的私有数据，而不是仅仅可以访问【隐式参数（this）】的私有属性
  */
 public class MethodAccessPrivilegeTest {
 
