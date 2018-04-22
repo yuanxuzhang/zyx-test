@@ -11,7 +11,7 @@ package com.zyx.object;
         return getClass().getName() + "@" + Integer.toHexString(hashCode());
     }
     
- * 数组继承了Object类的toString方法，数组类型将按照旧的格式打印，形如[I@2e45",I表明整形数组。修正的方式是Array.toString(XXX)
+ * 数组继承了Object类的toString方法，数组类型将按照旧的格式打印，形如[I@2e45",I表明整形数组。修正的方式是Arrays.toString(XXX)
  * 
  */
 public class ToStringTest {
