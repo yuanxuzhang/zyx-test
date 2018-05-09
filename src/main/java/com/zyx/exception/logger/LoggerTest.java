@@ -10,6 +10,7 @@ public class LoggerTest {
 		logger.info("XXX");
 		
 		Logger.global.info("XXX");
+	
 	}
 
 }
