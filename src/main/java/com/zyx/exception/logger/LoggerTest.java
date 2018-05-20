@@ -1,5 +1,6 @@
 package com.zyx.exception.logger;
 
+import java.util.logging.ConsoleHandler;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -32,9 +33,9 @@ public class LoggerTest {
 		 *  五月 19, 2018 8:44:36 下午 java.util.logging.LogManager$RootLogger log
 		 *  信息:
 		 * */
-		Logger parentLogger = Logger.getLogger("");
+		/*Logger parentLogger = Logger.getLogger("");
 		parentLogger.setLevel(Level.SEVERE);
-		parentLogger.info(parentLogger.getName());
+		parentLogger.info(parentLogger.getName());*/
 		
 		/* 
 		         五月 19, 2018 8:44:37 下午 com.zyx.exception.logger.LoggerTest main
@@ -44,12 +45,20 @@ public class LoggerTest {
 		   Exception in thread "main" java.lang.NullPointerException
 		   at com.zyx.exception.logger.LoggerTest.main(LoggerTest.java:39)
 		 * */
-		Logger childLogger = Logger.getLogger("child");
+		/*Logger childLogger = Logger.getLogger("child");
 		childLogger.setLevel(Level.INFO);
 		childLogger.info(childLogger.getName());
-		childLogger.info(childLogger.getParent().getName());
+		childLogger.info(childLogger.getParent().getName());*/
 		//childLogger.info(childLogger.getParent().getParent().getName());
 		
+		Logger childLogger = Logger.getLogger("child");
+		//childLogger.setUseParentHandlers(false);
+		childLogger.getHandlers(); // SIZE 0
+		childLogger.getParent().getHandlers(); // expect size 1 [java.util.logging.ConsoleHandler@12ddf17]
+		ConsoleHandler consoleHandler = new ConsoleHandler();
+		childLogger.addHandler(consoleHandler);
+		childLogger.info("XXX");
+
 	}
 
 }
