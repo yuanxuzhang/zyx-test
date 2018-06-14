@@ -30,7 +30,7 @@ public class ThreadInterfaceTest {
 
 	public static void main(String[] args) {
 
-		/*String directory = "C:\\Program Files\\Java\\jdk1.8.0_121\\src";
+		String directory = "C:\\Program Files\\Java\\jdk1.8.0_121\\src";
 		String keyword = "java";
 		
 		MatchCounter counter = new MatchCounter(new File(directory), keyword);
@@ -47,9 +47,9 @@ public class ThreadInterfaceTest {
 		}
 		catch(InterruptedException e){
 			// NOP
-		}*/
+		}
 		
-		CallableTest callable = new CallableTest();
+		/*CallableTest callable = new CallableTest();
 		ExecutorService threadPool = Executors.newSingleThreadExecutor();
 		Future<Integer> call = threadPool.submit(callable);
 		try {
@@ -59,7 +59,7 @@ public class ThreadInterfaceTest {
 		} catch (ExecutionException e) {
 			// NOP
 		}
-	}
+*/	}
 
 }
 
