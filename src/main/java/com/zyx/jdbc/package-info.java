@@ -104,5 +104,21 @@
  * ...WHERE ? LIKE %!_%{escape '!'}
  * 说明：将！定义为转义字符，而！_组合表示字面常量下划线。
  * 
+ * 多结果集
+ * 在执行【存储过程】，或者在使用允许在【单个查询中提交多个SELECT】语句的数据库时，一个查询可能会返回多个结果集。
+ * 1）执行execute方法执行SQL
+ * 2）根据上边的返回结果：true结果连第一个是结果集，调用getResult方法获取结果集，false调取getUpdateCount获取更新计数。
+ * 3）重复调用getMoreResult方法以【移动到下一个结果集】，还是使用getResultSet获取结果集。
+ * 4）退出条件getUpdateCount返回-1。
+ * 
+ * 获取自动生成键
+ * 大多数数据库都支持某种在数据库中对行自动计数的机制。但是，不同的提供商所提供的机制之间存在着很大的差异，而这些自动计数的值经常作为主键。尽管JDBC没有
+ * 提供独立于提供商的自动生成键的解决方案，但是他提供了获取自动生成键的有效途径。
+ * stmt.executUpdate(insertStatement, Statement.RETURN_GENERAtED_KEY);
+ * ResultSet rs = stmt.getGeneratedKeys();
+ * if(rs.next){
+ * 		int key = rs.getInt(1);
+ * }
+ * 
  */
 package com.zyx.jdbc;
