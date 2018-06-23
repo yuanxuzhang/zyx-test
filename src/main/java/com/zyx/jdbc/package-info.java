@@ -120,5 +120,109 @@
  * 		int key = rs.getInt(1);
  * }
  * 
+ * 可滚动的结果集       ----可滚动的结果集有一个【游标】，用于指示当前位置-------
+ * 默认情况下，结果集是不可滚动和不可更新的。为了从查询中获取可滚动的结果集，必须使用：conn.createStament（type，concurrency）
+ * type种类：
+ * ResultSet.TYPE_FORWORD_ONLY 不可滚动
+ * ResultSet.TYPE_SCROLL_INSENSITIVE 结果集可滚动，但对--数据库变化--不敏感。
+ * ResultSet.TYPE_SCROLL_SENITIVE        可滚动，且对--数据库变化--敏感。
+ * 
+ * ResultSet.CONCUR_READ_ONLY   结果集不能用于更新数据库
+ * ResultSet.CONCUR_UPDATEBLE   结果集可以用于更新数据
+ * 使用可滚动的结果集是非常简单的，----将查询数据放入缓存中----的复杂工作是由数据库驱动程序在后台完成的。
+ * 
+ * 可更新的结果集
+ * 编辑的结果集，且数据的变化会自动反映到数据库中。
+ * 可更新的的结果集并非必须是可滚动的，但一般是可滚动的。
+ * 并非所有的查询都会返回可更新的结果集。如果查询涉及多个表的连接操作，那么它所产生的结果集将是不可更新的。
+ * 如果查询只涉及到一个表，或者查询时使用主键连接多个表，那么它所产生的结果集将是可更新的结果集。
+ * 可以调用ResultSet接口中的getConcurrency方法来确定结果集是否是可更新的。
+ * 
+ * 行集（RowSet）
+ * 可滚动的结果集需要在交互过程中始终与数据保持连接，稀有的数据库连接资源被占用。
+ * RowSet接口扩展自ResultSet接口，却无需始终保持与数据库的连接。
+ * 行集的实现类：
+ * CachedRowSet：被缓存的行集，允许在断开连接的情况下执行操作。
+ * WebRowSet：        一个被缓存的行集，可以保存为XML文件，改文件可以移动到Web应用的其它层，只要在该层中使用WebRowSet对象重新打开。
+ * FilteredRowSet和JoinRowSet：支持对行集的轻量级操作，等同于SQL中的SELECT和JOIN操作，它们操作的是存储在行集中的数据，运行时无需建立
+ * 数据库连接。
+ * JdbcRowSet：是ResultSet接口的一个瘦包装器。它从RowSet接口继承了均有用的get和set方法，从而将一个结果集转换成一个“bean”。
+ * 构建方法：
+ * RowSetFactory factory = RowSetProvider.newFactory();
+ * CachedRowSet crs = factory.createCachedRowSet();
+ * 一个被缓存的行集包含了一个结果集中所有的数据。
+ * CachedRowSet是ResultSet接口的子接口，可以完全像使用结果集一样使用行集。
+ * 行集在断开数据库连接后仍然可以使用行集，1打开数据库连接--2执行查询操作--3将查询结果放入被缓存的行集populate--4关闭数据连接。
+ * 可以直接修改被缓存的行集中的数据，这些修改不会立即反馈到数据库中，必须发起一个显示的请求，以便让数据库真正接受所有修改，此时CachedRowSet类会重新
+ * 连接到数据库，并通过执行SQL语句向数据库中写入所有修改后的数据。
+ * 如果查询量非常大，不想将所有数据全部放入行集，请使用分页 cachedRowSet.setPageSize(number),获取下一页nextPage()。
+ * 可以使用与结果集中相同的方法来查看和修改行集中的数据，如果修改了行集中的内容，nm必须使用acceptChanges([connection])将修改写会数据库。
+ * 一个复杂化的问题：对于填充行集之后，数据库中的数据发生变化，而行集修改了变化的值，造成的不一致，【参考实现】将会检查行集的原始值和数据库的值是否一致，不一致
+ * 将抛出SyncProviderException异常，且不向数据库写会任何值。
+ * 
+ * 元数据（MetaData）
+ * JDBC提供了关于数据库以及表结构的详细信息，（获取数据库的所有表，获取表的列和数据类型）。
+ * 特别适用于数据库工具开发人员。
+ * 三类元数据：
+ * 1）数据库的元数据
+ * 使用数据库连接对象的getMetaData方法获取一个DatabaseMetaData对象
+ * 2）结果集的元数据
+ * ResultSetMetaData用于提供结果集的相关信息（例如列名称、类型和字段宽度等等）
+ * 3）预备语句参数的元数据
+ * 
+ * 事务（Transaction）
+ * 构建一组语句，当所有语句都顺利执行之后，事务可以被提交（commit），如果其中某个语句遇到错误，那么事务就被回滚（rollback），就好像没有任何语句被执行过一样。
+ * 目的：保证数据库的完整性。
+ * 默认情况下，数据库连接处于自动提交模式（AutoCommit Mode），每个SQL语句一旦被执行便被提交给数据库，一旦命令被提交，就无法对他进行回滚操作。
+ * 保存点（Save Point）
+ * 某些驱动程序，使用保存点更细粒度地控制回滚操作，创建保存点：connection.setSavepoint, connection.rollback("保存点")
+ * 不再需要保存点时，必须释放它，connection。releaseSavepoint("保存点")
+ * 
+ * 批量更新（Batch Update）
+ * 需要执行许多insert语句时，可以使用批量更新的方法来提高程序性能，一个【语句序列】作为一批操作同时被【收集】和【提交】。
+ * DatabaseMetaData接口中的supportBatchUpdate方法可以知道数据库是否支持批量更新。
+ * ------处于同一批中的语句可以使insert、update和delete等操作，也可以是数据库定义语句create、drop。但是，在批量语句中添加Select会抛出异常。-------
+ * 执行过程：
+ * 1）创建语句Statement对象。
+ * 1.1）关闭自动提交模式。
+ * 2）调用语句的addBatch方法添加命令。
+ * 3）调用语句的executebatch方法提交批量更新。
+ * 3.3）执行提交操作。
+ * **********为了在批量模型下正确地处理错误，必须将批量执行的操作视为单个事务，如果批量更新的执行过程中失败，必须将它回滚到批量操作之前的状态。*********
+ * 
+ * 数据类型对照关系：
+ *       SQL数据类型                                                                              Java数据类型
+ *       INTEGER或INT	                    int
+ *       SMALLINt							short
+ *       NUMBER(m.n)DECIMAL(m,n)            java.math.BigDecimal
+ *       FLOAT(n)							double
+ *       REAL								float
+ *       DOUBLE								double
+ *       CHARCTER(n)或CHAR(n)				String
+ *       VARCHAR(n)LONGVARCHAR				String
+ *       BOOLEAN							boolean
+ *       DATE								java.sql.Date
+ *       TIME								java.sql.TIME
+ *       TIMESTAMP							java.sql.Timestamp
+ *       BLOB								java.sql.Blob
+ *       CLOB								java.sql.Clob
+ *       ARRAY								java.sql.Array
+ *       NCHAR(n)NVARCHAR(n)LONGNVCHAR		String
+ *       NCLOB								java.sql.NClob
+ *       SQLXML								java.sql.SQLXML
+ *       ROWID								java.sql.RowId
+ * SQL ARRAY(SQL数组)指的是值得序列。getArray方法返回一个接口类型为java.sql.Array的对象。
+ * 从数据库中获取一个LOB或数组并不等于获取它的实际内容，只有在访问具体的值时它们才会从数据库中被读取出来。
+ * 某些数据库支持描述行位置的ROWID值，这样就可以非常快捷地获取某一行值
+ * 
+ * Drivermanager和JNDI（java名字和目录接口）
+ * 在Web或企业中JNDI可用来定位(lookup)数据源,数据源就是一个能够提供简单的JDBC连接和更过高级服务的接口（比如，多库间的分布式事务控制）
+ * 
+ * 数据库连接池（Pool）
+ * 数据库连接从池中获取，用完后返还连接池，连接在物理上并未被关闭，而是保留在一个队列上并被反复重用。
+ * 连接池是一种非常重要的服务，JDBC规范为实现者提供了用以实现连接池服务的手段。不过，JDK本事并未实现这项服务，数据库供应商提供的JDBC驱动程序中通常也不包含这项
+ * 服务，Web容器和应用服务器的开发商通常会提供连接池服务。
+ * 连接池的使用对程序员来说是完全透明的，可以通过获取数据源并调用getConnection方法来得到连接池中的连接。使用玩连接之后，需要调用close方法。该方法并不在物理
+ * 上关闭连接，而只是告诉连接池已经使用完该链接。连接池通常还会将池机制作用于预备语句上。
  */
 package com.zyx.jdbc;
