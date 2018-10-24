@@ -14,6 +14,7 @@ Java日志API由以下三个核心组件组成：
 
 另外一个考虑因素是框架在基于Java的各种不同项目上的支持程度。例如Android程序只能使用Log4j、Logback或者第三方包来记录日志， Apache Tomcat可以使用
 Log4j来记录内部消息，但只能使用版本1的Log4j。  
+[组件](https://github.com/yuanxuzhang/zyx-test/blob/master/src/main/java/com/zyx/log/components.png)
 ## 抽象层  
 
 诸如SLF4J这样的抽象层，会将你的应用程序从日志框架中解耦。应用程序可以在运行时选择绑定到一个特定的日志框架（例如java.util.logging、Log4j或者Logback），这通过在应用程序的类路径中添加对应的日志框架来实现。如果在类路径中配置的日志框架不可用，抽象层就会立刻取消调用日志的相应逻辑。抽象层可以让我们更加容易地改变项目现有的日志框架，或者集成那些使用了不同日志框架的项目。  
