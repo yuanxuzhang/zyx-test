@@ -38,4 +38,5 @@ spring boot内部使用Commons Logging来记录日志，但也保留外部接口
 ---  
 # FROM  
 [Java日志终极指南](http://www.importnew.com/16331.html)  
-[Logback](https://www.cnblogs.com/lixuwu/p/5804793.html)
+[Logback](https://www.cnblogs.com/lixuwu/p/5804793.html)  
+[LogbackConfigure](https://logback.qos.ch/manual/configuration.html)  
