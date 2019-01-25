@@ -8,7 +8,7 @@ import java.util.Properties;
  * class和classLoader的获取资源的getResource模式
  * 
  * class.getResource(String path)
- * path  以'/'开始，默认是从此类所在的包下获取资源
+ * path  以''开始，默认是从【此类】所在的包下获取资源
  *       以'/'开始，则是从【项目】的ClassPath根下获取资源
  * class.getClassLoader().getResource(String path)
  * path  不可以'/'开头，path是指类加载器的加载范围，在资源加载过程中，使用逐级向上委托的形式加载的，'/'表示Boot ClassLoader中的加载范围，
