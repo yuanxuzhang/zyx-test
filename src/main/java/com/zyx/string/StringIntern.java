@@ -36,7 +36,7 @@ public class StringIntern {
 			System.out.println("They are different string object!");
 		}
 		
-		// 命令行参数传入的字符串不会是引用文字，不会被JVM拘留
+		// [1]命令行参数传入的字符串不会是引用文字，不会被JVM拘留
 		String argZero = args[0];
 		
 		System.out.println("Before interning argZero:");
@@ -97,6 +97,13 @@ public class StringIntern {
 		else {
 			System.out.println("final no equal");
 		}
+		
+		String a = "a";
+		String b = "b";
+		String ab = "ab";
+		// [2]字符串变量(非常量)的+运算不会被拘留
+		System.out.println(ab == (a + b));
+		System.out.println(ab == ("a" + "b"));
 	}
 
 }
