@@ -12,7 +12,9 @@ package com.zyx.proxy;
  * 路由对远程服务器的方法调用
  * 在程序运行期间，将用户接口事件与动作关联起来
  * 为调试，跟踪方法调用
- * 
+ *
+ * 为何动态代理只能实现接口的代理：生成的根据接口生成的Class类文件继承了Proxy类，实现了代理的接口，由于java不能多继承，这里已经继承了Proxy类了，不能再继承其他的类，
+ * 所以JDK的动态代理不支持对实现类的代理，只支持接口的代理。【动态代理详解】https://blog.csdn.net/tyrroo/article/details/79072796 
  */
 public class ProxyTest {
 
